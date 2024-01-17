@@ -1736,6 +1736,37 @@ func (m *WeightedCluster) validate(all bool) error {
 
 	// no validation rules for RuntimeKeyPrefix
 
+	// no validation rules for ClusterSpecifierPlugin
+
+	if all {
+		switch v := interface{}(m.GetInlineClusterSpecifierPlugin()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, WeightedClusterValidationError{
+					field:  "InlineClusterSpecifierPlugin",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, WeightedClusterValidationError{
+					field:  "InlineClusterSpecifierPlugin",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetInlineClusterSpecifierPlugin()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return WeightedClusterValidationError{
+				field:  "InlineClusterSpecifierPlugin",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	switch v := m.RandomValueSpecifier.(type) {
 	case *WeightedCluster_HeaderName:
 		if v == nil {
@@ -3437,6 +3468,35 @@ func (m *RouteAction) validate(all bool) error {
 		if err := v.Validate(); err != nil {
 			return RouteActionValidationError{
 				field:  "MaxStreamDuration",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetInternalActiveRedirectPolicy()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RouteActionValidationError{
+					field:  "InternalActiveRedirectPolicy",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RouteActionValidationError{
+					field:  "InternalActiveRedirectPolicy",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetInternalActiveRedirectPolicy()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RouteActionValidationError{
+				field:  "InternalActiveRedirectPolicy",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -6298,6 +6358,350 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = InternalRedirectPolicyValidationError{}
+
+// Validate checks the field values on InternalActiveRedirectPolicy with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *InternalActiveRedirectPolicy) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on InternalActiveRedirectPolicy with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// InternalActiveRedirectPolicyMultiError, or nil if none found.
+func (m *InternalActiveRedirectPolicy) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *InternalActiveRedirectPolicy) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetMaxInternalRedirects()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, InternalActiveRedirectPolicyValidationError{
+					field:  "MaxInternalRedirects",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, InternalActiveRedirectPolicyValidationError{
+					field:  "MaxInternalRedirects",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetMaxInternalRedirects()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return InternalActiveRedirectPolicyValidationError{
+				field:  "MaxInternalRedirects",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(m.GetRedirectResponseCodes()) > 50 {
+		err := InternalActiveRedirectPolicyValidationError{
+			field:  "RedirectResponseCodes",
+			reason: "value must contain no more than 50 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetPredicates() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicyValidationError{
+						field:  fmt.Sprintf("Predicates[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicyValidationError{
+						field:  fmt.Sprintf("Predicates[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return InternalActiveRedirectPolicyValidationError{
+					field:  fmt.Sprintf("Predicates[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	// no validation rules for AllowCrossSchemeRedirect
+
+	if len(m.GetRequestHeadersToAdd()) > 1000 {
+		err := InternalActiveRedirectPolicyValidationError{
+			field:  "RequestHeadersToAdd",
+			reason: "value must contain no more than 1000 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetRequestHeadersToAdd() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicyValidationError{
+						field:  fmt.Sprintf("RequestHeadersToAdd[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicyValidationError{
+						field:  fmt.Sprintf("RequestHeadersToAdd[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return InternalActiveRedirectPolicyValidationError{
+					field:  fmt.Sprintf("RequestHeadersToAdd[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if !_InternalActiveRedirectPolicy_HostRewriteLiteral_Pattern.MatchString(m.GetHostRewriteLiteral()) {
+		err := InternalActiveRedirectPolicyValidationError{
+			field:  "HostRewriteLiteral",
+			reason: "value does not match regex pattern \"^[^\\x00\\n\\r]*$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for ForcedUseOriginalHost
+
+	// no validation rules for ForcedAddHeaderBeforeRouteMatcher
+
+	for idx, item := range m.GetPolicies() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicyValidationError{
+						field:  fmt.Sprintf("Policies[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicyValidationError{
+						field:  fmt.Sprintf("Policies[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return InternalActiveRedirectPolicyValidationError{
+					field:  fmt.Sprintf("Policies[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	switch v := m.RedirectUrlRewriteSpecifier.(type) {
+	case *InternalActiveRedirectPolicy_RedirectUrl:
+		if v == nil {
+			err := InternalActiveRedirectPolicyValidationError{
+				field:  "RedirectUrlRewriteSpecifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if utf8.RuneCountInString(m.GetRedirectUrl()) < 1 {
+			err := InternalActiveRedirectPolicyValidationError{
+				field:  "RedirectUrl",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	case *InternalActiveRedirectPolicy_RedirectUrlRewriteRegex:
+		if v == nil {
+			err := InternalActiveRedirectPolicyValidationError{
+				field:  "RedirectUrlRewriteSpecifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetRedirectUrlRewriteRegex()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicyValidationError{
+						field:  "RedirectUrlRewriteRegex",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicyValidationError{
+						field:  "RedirectUrlRewriteRegex",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetRedirectUrlRewriteRegex()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return InternalActiveRedirectPolicyValidationError{
+					field:  "RedirectUrlRewriteRegex",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	default:
+		_ = v // ensures v is used
+	}
+
+	if len(errors) > 0 {
+		return InternalActiveRedirectPolicyMultiError(errors)
+	}
+
+	return nil
+}
+
+// InternalActiveRedirectPolicyMultiError is an error wrapping multiple
+// validation errors returned by InternalActiveRedirectPolicy.ValidateAll() if
+// the designated constraints aren't met.
+type InternalActiveRedirectPolicyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m InternalActiveRedirectPolicyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m InternalActiveRedirectPolicyMultiError) AllErrors() []error { return m }
+
+// InternalActiveRedirectPolicyValidationError is the validation error returned
+// by InternalActiveRedirectPolicy.Validate if the designated constraints
+// aren't met.
+type InternalActiveRedirectPolicyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e InternalActiveRedirectPolicyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e InternalActiveRedirectPolicyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e InternalActiveRedirectPolicyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e InternalActiveRedirectPolicyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e InternalActiveRedirectPolicyValidationError) ErrorName() string {
+	return "InternalActiveRedirectPolicyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e InternalActiveRedirectPolicyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sInternalActiveRedirectPolicy.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = InternalActiveRedirectPolicyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = InternalActiveRedirectPolicyValidationError{}
+
+var _InternalActiveRedirectPolicy_HostRewriteLiteral_Pattern = regexp.MustCompile("^[^\x00\n\r]*$")
 
 // Validate checks the field values on FilterConfig with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -12140,3 +12544,329 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RateLimit_Override_DynamicMetadataValidationError{}
+
+// Validate checks the field values on
+// InternalActiveRedirectPolicy_RedirectPolicy with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *InternalActiveRedirectPolicy_RedirectPolicy) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// InternalActiveRedirectPolicy_RedirectPolicy with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in
+// InternalActiveRedirectPolicy_RedirectPolicyMultiError, or nil if none found.
+func (m *InternalActiveRedirectPolicy_RedirectPolicy) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *InternalActiveRedirectPolicy_RedirectPolicy) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetMaxInternalRedirects()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+					field:  "MaxInternalRedirects",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+					field:  "MaxInternalRedirects",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetMaxInternalRedirects()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+				field:  "MaxInternalRedirects",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(m.GetRedirectResponseCodes()) > 50 {
+		err := InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+			field:  "RedirectResponseCodes",
+			reason: "value must contain no more than 50 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetPredicates() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+						field:  fmt.Sprintf("Predicates[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+						field:  fmt.Sprintf("Predicates[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+					field:  fmt.Sprintf("Predicates[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	// no validation rules for AllowCrossSchemeRedirect
+
+	if len(m.GetRequestHeadersToAdd()) > 1000 {
+		err := InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+			field:  "RequestHeadersToAdd",
+			reason: "value must contain no more than 1000 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetRequestHeadersToAdd() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+						field:  fmt.Sprintf("RequestHeadersToAdd[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+						field:  fmt.Sprintf("RequestHeadersToAdd[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+					field:  fmt.Sprintf("RequestHeadersToAdd[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if !_InternalActiveRedirectPolicy_RedirectPolicy_HostRewriteLiteral_Pattern.MatchString(m.GetHostRewriteLiteral()) {
+		err := InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+			field:  "HostRewriteLiteral",
+			reason: "value does not match regex pattern \"^[^\\x00\\n\\r]*$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for ForcedUseOriginalHost
+
+	// no validation rules for ForcedAddHeaderBeforeRouteMatcher
+
+	oneofRedirectUrlRewriteSpecifierPresent := false
+	switch v := m.RedirectUrlRewriteSpecifier.(type) {
+	case *InternalActiveRedirectPolicy_RedirectPolicy_RedirectUrl:
+		if v == nil {
+			err := InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+				field:  "RedirectUrlRewriteSpecifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		oneofRedirectUrlRewriteSpecifierPresent = true
+
+		if utf8.RuneCountInString(m.GetRedirectUrl()) < 1 {
+			err := InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+				field:  "RedirectUrl",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	case *InternalActiveRedirectPolicy_RedirectPolicy_RedirectUrlRewriteRegex:
+		if v == nil {
+			err := InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+				field:  "RedirectUrlRewriteSpecifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		oneofRedirectUrlRewriteSpecifierPresent = true
+
+		if all {
+			switch v := interface{}(m.GetRedirectUrlRewriteRegex()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+						field:  "RedirectUrlRewriteRegex",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+						field:  "RedirectUrlRewriteRegex",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetRedirectUrlRewriteRegex()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+					field:  "RedirectUrlRewriteRegex",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	default:
+		_ = v // ensures v is used
+	}
+	if !oneofRedirectUrlRewriteSpecifierPresent {
+		err := InternalActiveRedirectPolicy_RedirectPolicyValidationError{
+			field:  "RedirectUrlRewriteSpecifier",
+			reason: "value is required",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return InternalActiveRedirectPolicy_RedirectPolicyMultiError(errors)
+	}
+
+	return nil
+}
+
+// InternalActiveRedirectPolicy_RedirectPolicyMultiError is an error wrapping
+// multiple validation errors returned by
+// InternalActiveRedirectPolicy_RedirectPolicy.ValidateAll() if the designated
+// constraints aren't met.
+type InternalActiveRedirectPolicy_RedirectPolicyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m InternalActiveRedirectPolicy_RedirectPolicyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m InternalActiveRedirectPolicy_RedirectPolicyMultiError) AllErrors() []error { return m }
+
+// InternalActiveRedirectPolicy_RedirectPolicyValidationError is the validation
+// error returned by InternalActiveRedirectPolicy_RedirectPolicy.Validate if
+// the designated constraints aren't met.
+type InternalActiveRedirectPolicy_RedirectPolicyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e InternalActiveRedirectPolicy_RedirectPolicyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e InternalActiveRedirectPolicy_RedirectPolicyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e InternalActiveRedirectPolicy_RedirectPolicyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e InternalActiveRedirectPolicy_RedirectPolicyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e InternalActiveRedirectPolicy_RedirectPolicyValidationError) ErrorName() string {
+	return "InternalActiveRedirectPolicy_RedirectPolicyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e InternalActiveRedirectPolicy_RedirectPolicyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sInternalActiveRedirectPolicy_RedirectPolicy.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = InternalActiveRedirectPolicy_RedirectPolicyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = InternalActiveRedirectPolicy_RedirectPolicyValidationError{}
+
+var _InternalActiveRedirectPolicy_RedirectPolicy_HostRewriteLiteral_Pattern = regexp.MustCompile("^[^\x00\n\r]*$")
