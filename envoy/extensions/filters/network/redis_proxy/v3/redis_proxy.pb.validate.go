@@ -265,6 +265,35 @@ func (m *RedisProxy) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetExternalAuthProvider()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RedisProxyValidationError{
+					field:  "ExternalAuthProvider",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RedisProxyValidationError{
+					field:  "ExternalAuthProvider",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetExternalAuthProvider()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RedisProxyValidationError{
+				field:  "ExternalAuthProvider",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return RedisProxyMultiError(errors)
 	}
@@ -422,6 +451,35 @@ func (m *RedisProtocolOptions) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetAwsIam()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RedisProtocolOptionsValidationError{
+					field:  "AwsIam",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RedisProtocolOptionsValidationError{
+					field:  "AwsIam",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetAwsIam()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RedisProtocolOptionsValidationError{
+				field:  "AwsIam",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return RedisProtocolOptionsMultiError(errors)
 	}
@@ -501,6 +559,312 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RedisProtocolOptionsValidationError{}
+
+// Validate checks the field values on AwsIam with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *AwsIam) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AwsIam with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in AwsIamMultiError, or nil if none found.
+func (m *AwsIam) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AwsIam) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetCredentialProvider()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, AwsIamValidationError{
+					field:  "CredentialProvider",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, AwsIamValidationError{
+					field:  "CredentialProvider",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCredentialProvider()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return AwsIamValidationError{
+				field:  "CredentialProvider",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if utf8.RuneCountInString(m.GetCacheName()) < 1 {
+		err := AwsIamValidationError{
+			field:  "CacheName",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for ServiceName
+
+	// no validation rules for Region
+
+	if d := m.GetExpirationTime(); d != nil {
+		dur, err := d.AsDuration(), d.CheckValid()
+		if err != nil {
+			err = AwsIamValidationError{
+				field:  "ExpirationTime",
+				reason: "value is not a valid duration",
+				cause:  err,
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+
+			lte := time.Duration(900*time.Second + 0*time.Nanosecond)
+			gte := time.Duration(0*time.Second + 0*time.Nanosecond)
+
+			if dur < gte || dur > lte {
+				err := AwsIamValidationError{
+					field:  "ExpirationTime",
+					reason: "value must be inside range [0s, 15m0s]",
+				}
+				if !all {
+					return err
+				}
+				errors = append(errors, err)
+			}
+
+		}
+	}
+
+	if len(errors) > 0 {
+		return AwsIamMultiError(errors)
+	}
+
+	return nil
+}
+
+// AwsIamMultiError is an error wrapping multiple validation errors returned by
+// AwsIam.ValidateAll() if the designated constraints aren't met.
+type AwsIamMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AwsIamMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AwsIamMultiError) AllErrors() []error { return m }
+
+// AwsIamValidationError is the validation error returned by AwsIam.Validate if
+// the designated constraints aren't met.
+type AwsIamValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AwsIamValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AwsIamValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AwsIamValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AwsIamValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AwsIamValidationError) ErrorName() string { return "AwsIamValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AwsIamValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAwsIam.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AwsIamValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AwsIamValidationError{}
+
+// Validate checks the field values on RedisExternalAuthProvider with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RedisExternalAuthProvider) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RedisExternalAuthProvider with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RedisExternalAuthProviderMultiError, or nil if none found.
+func (m *RedisExternalAuthProvider) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RedisExternalAuthProvider) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetGrpcService()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RedisExternalAuthProviderValidationError{
+					field:  "GrpcService",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RedisExternalAuthProviderValidationError{
+					field:  "GrpcService",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetGrpcService()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RedisExternalAuthProviderValidationError{
+				field:  "GrpcService",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for EnableAuthExpiration
+
+	if len(errors) > 0 {
+		return RedisExternalAuthProviderMultiError(errors)
+	}
+
+	return nil
+}
+
+// RedisExternalAuthProviderMultiError is an error wrapping multiple validation
+// errors returned by RedisExternalAuthProvider.ValidateAll() if the
+// designated constraints aren't met.
+type RedisExternalAuthProviderMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RedisExternalAuthProviderMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RedisExternalAuthProviderMultiError) AllErrors() []error { return m }
+
+// RedisExternalAuthProviderValidationError is the validation error returned by
+// RedisExternalAuthProvider.Validate if the designated constraints aren't met.
+type RedisExternalAuthProviderValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RedisExternalAuthProviderValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RedisExternalAuthProviderValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RedisExternalAuthProviderValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RedisExternalAuthProviderValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RedisExternalAuthProviderValidationError) ErrorName() string {
+	return "RedisExternalAuthProviderValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RedisExternalAuthProviderValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRedisExternalAuthProvider.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RedisExternalAuthProviderValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RedisExternalAuthProviderValidationError{}
 
 // Validate checks the field values on RedisProxy_ConnPoolSettings with the
 // rules defined in the proto definition for this message. If any rules are
@@ -1122,7 +1486,16 @@ func (m *RedisProxy_ConnectionRateLimit) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for ConnectionRateLimitPerSec
+	if m.GetConnectionRateLimitPerSec() <= 0 {
+		err := RedisProxy_ConnectionRateLimitValidationError{
+			field:  "ConnectionRateLimitPerSec",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return RedisProxy_ConnectionRateLimitMultiError(errors)
@@ -1286,6 +1659,35 @@ func (m *RedisProxy_PrefixRoutes_Route) validate(all bool) error {
 	}
 
 	// no validation rules for KeyFormatter
+
+	if all {
+		switch v := interface{}(m.GetReadCommandPolicy()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RedisProxy_PrefixRoutes_RouteValidationError{
+					field:  "ReadCommandPolicy",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RedisProxy_PrefixRoutes_RouteValidationError{
+					field:  "ReadCommandPolicy",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetReadCommandPolicy()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RedisProxy_PrefixRoutes_RouteValidationError{
+				field:  "ReadCommandPolicy",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return RedisProxy_PrefixRoutes_RouteMultiError(errors)
@@ -1522,3 +1924,125 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RedisProxy_PrefixRoutes_Route_RequestMirrorPolicyValidationError{}
+
+// Validate checks the field values on
+// RedisProxy_PrefixRoutes_Route_ReadCommandPolicy with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *RedisProxy_PrefixRoutes_Route_ReadCommandPolicy) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// RedisProxy_PrefixRoutes_Route_ReadCommandPolicy with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in
+// RedisProxy_PrefixRoutes_Route_ReadCommandPolicyMultiError, or nil if none found.
+func (m *RedisProxy_PrefixRoutes_Route_ReadCommandPolicy) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RedisProxy_PrefixRoutes_Route_ReadCommandPolicy) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetCluster()) < 1 {
+		err := RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError{
+			field:  "Cluster",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return RedisProxy_PrefixRoutes_Route_ReadCommandPolicyMultiError(errors)
+	}
+
+	return nil
+}
+
+// RedisProxy_PrefixRoutes_Route_ReadCommandPolicyMultiError is an error
+// wrapping multiple validation errors returned by
+// RedisProxy_PrefixRoutes_Route_ReadCommandPolicy.ValidateAll() if the
+// designated constraints aren't met.
+type RedisProxy_PrefixRoutes_Route_ReadCommandPolicyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RedisProxy_PrefixRoutes_Route_ReadCommandPolicyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RedisProxy_PrefixRoutes_Route_ReadCommandPolicyMultiError) AllErrors() []error { return m }
+
+// RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError is the
+// validation error returned by
+// RedisProxy_PrefixRoutes_Route_ReadCommandPolicy.Validate if the designated
+// constraints aren't met.
+type RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError) Field() string {
+	return e.field
+}
+
+// Reason function returns reason value.
+func (e RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError) Reason() string {
+	return e.reason
+}
+
+// Cause function returns cause value.
+func (e RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError) ErrorName() string {
+	return "RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRedisProxy_PrefixRoutes_Route_ReadCommandPolicy.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RedisProxy_PrefixRoutes_Route_ReadCommandPolicyValidationError{}

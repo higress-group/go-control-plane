@@ -282,6 +282,10 @@ func (m *CommandLineOptions) validate(all bool) error {
 
 	// no validation rules for UseDynamicBaseId
 
+	// no validation rules for SkipHotRestartOnNoParent
+
+	// no validation rules for SkipHotRestartParentStats
+
 	// no validation rules for BaseIdPath
 
 	// no validation rules for Concurrency
@@ -295,6 +299,8 @@ func (m *CommandLineOptions) validate(all bool) error {
 	// no validation rules for RejectUnknownDynamicFields
 
 	// no validation rules for IgnoreUnknownDynamicFields
+
+	// no validation rules for SkipDeprecatedLogs
 
 	// no validation rules for AdminAddressPath
 

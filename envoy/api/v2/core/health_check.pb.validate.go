@@ -523,6 +523,8 @@ func (m *HealthCheck) validate(all bool) error {
 		}
 	}
 
+	// no validation rules for StoreMetrics
+
 	oneofHealthCheckerPresent := false
 	switch v := m.HealthChecker.(type) {
 	case *HealthCheck_HttpHealthCheck_:

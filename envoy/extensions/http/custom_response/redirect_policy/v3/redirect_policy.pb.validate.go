@@ -57,12 +57,128 @@ func (m *RedirectPolicy) validate(all bool) error {
 
 	var errors []error
 
+	if all {
+		switch v := interface{}(m.GetMaxInternalRedirects()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RedirectPolicyValidationError{
+					field:  "MaxInternalRedirects",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RedirectPolicyValidationError{
+					field:  "MaxInternalRedirects",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetMaxInternalRedirects()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RedirectPolicyValidationError{
+				field:  "MaxInternalRedirects",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetKeepOriginalResponseCode()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RedirectPolicyValidationError{
+					field:  "KeepOriginalResponseCode",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RedirectPolicyValidationError{
+					field:  "KeepOriginalResponseCode",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetKeepOriginalResponseCode()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RedirectPolicyValidationError{
+				field:  "KeepOriginalResponseCode",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetUseOriginalRequestBody()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RedirectPolicyValidationError{
+					field:  "UseOriginalRequestBody",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RedirectPolicyValidationError{
+					field:  "UseOriginalRequestBody",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUseOriginalRequestBody()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RedirectPolicyValidationError{
+				field:  "UseOriginalRequestBody",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetOnlyRedirectUpstreamCode()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RedirectPolicyValidationError{
+					field:  "OnlyRedirectUpstreamCode",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RedirectPolicyValidationError{
+					field:  "OnlyRedirectUpstreamCode",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetOnlyRedirectUpstreamCode()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RedirectPolicyValidationError{
+				field:  "OnlyRedirectUpstreamCode",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if wrapper := m.GetStatusCode(); wrapper != nil {
 
-		if val := wrapper.GetValue(); val < 100 || val > 999 {
+		if val := wrapper.GetValue(); val < 200 || val > 999 {
 			err := RedirectPolicyValidationError{
 				field:  "StatusCode",
-				reason: "value must be inside range [100, 999]",
+				reason: "value must be inside range [200, 999]",
 			}
 			if !all {
 				return err
@@ -253,6 +369,72 @@ func (m *RedirectPolicy) validate(all bool) error {
 			if err := v.Validate(); err != nil {
 				return RedirectPolicyValidationError{
 					field:  "RedirectAction",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	case *RedirectPolicy_UriFromResponseHeader:
+		if v == nil {
+			err := RedirectPolicyValidationError{
+				field:  "RedirectActionSpecifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		oneofRedirectActionSpecifierPresent = true
+
+		if utf8.RuneCountInString(m.GetUriFromResponseHeader()) < 1 {
+			err := RedirectPolicyValidationError{
+				field:  "UriFromResponseHeader",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	case *RedirectPolicy_UseOriginalRequestUri:
+		if v == nil {
+			err := RedirectPolicyValidationError{
+				field:  "RedirectActionSpecifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		oneofRedirectActionSpecifierPresent = true
+
+		if all {
+			switch v := interface{}(m.GetUseOriginalRequestUri()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, RedirectPolicyValidationError{
+						field:  "UseOriginalRequestUri",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, RedirectPolicyValidationError{
+						field:  "UseOriginalRequestUri",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetUseOriginalRequestUri()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return RedirectPolicyValidationError{
+					field:  "UseOriginalRequestUri",
 					reason: "embedded message failed validation",
 					cause:  err,
 				}

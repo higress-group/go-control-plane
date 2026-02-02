@@ -74,6 +74,8 @@ func (m *ExtAuthz) validate(all bool) error {
 
 	// no validation rules for FailureModeAllow
 
+	// no validation rules for FailureModeAllowHeaderAdd
+
 	if all {
 		switch v := interface{}(m.GetWithRequestBody()).(type) {
 		case interface{ ValidateAll() error }:
@@ -133,6 +135,8 @@ func (m *ExtAuthz) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for ValidateMutations
 
 	if all {
 		switch v := interface{}(m.GetFilterEnabled()).(type) {
@@ -256,7 +260,158 @@ func (m *ExtAuthz) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetDisallowedHeaders()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "DisallowedHeaders",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "DisallowedHeaders",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetDisallowedHeaders()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ExtAuthzValidationError{
+				field:  "DisallowedHeaders",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	// no validation rules for IncludeTlsSession
+
+	if all {
+		switch v := interface{}(m.GetChargeClusterResponseStats()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "ChargeClusterResponseStats",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "ChargeClusterResponseStats",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetChargeClusterResponseStats()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ExtAuthzValidationError{
+				field:  "ChargeClusterResponseStats",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for EncodeRawHeaders
+
+	if all {
+		switch v := interface{}(m.GetDecoderHeaderMutationRules()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "DecoderHeaderMutationRules",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "DecoderHeaderMutationRules",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetDecoderHeaderMutationRules()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ExtAuthzValidationError{
+				field:  "DecoderHeaderMutationRules",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetEnableDynamicMetadataIngestion()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "EnableDynamicMetadataIngestion",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "EnableDynamicMetadataIngestion",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetEnableDynamicMetadataIngestion()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ExtAuthzValidationError{
+				field:  "EnableDynamicMetadataIngestion",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetFilterMetadata()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "FilterMetadata",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ExtAuthzValidationError{
+					field:  "FilterMetadata",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetFilterMetadata()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ExtAuthzValidationError{
+				field:  "FilterMetadata",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for EmitFilterStateStats
+
+	// no validation rules for MaxDeniedResponseBodyBytes
 
 	switch v := m.Services.(type) {
 	case *ExtAuthz_GrpcService:
@@ -642,6 +797,35 @@ func (m *HttpService) validate(all bool) error {
 		if err := v.Validate(); err != nil {
 			return HttpServiceValidationError{
 				field:  "AuthorizationResponse",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetRetryPolicy()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HttpServiceValidationError{
+					field:  "RetryPolicy",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HttpServiceValidationError{
+					field:  "RetryPolicy",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetRetryPolicy()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HttpServiceValidationError{
+				field:  "RetryPolicy",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -1173,18 +1357,7 @@ func (m *ExtAuthzPerRoute) validate(all bool) error {
 			errors = append(errors, err)
 		}
 		oneofOverridePresent = true
-
-		if m.GetDisabled() != true {
-			err := ExtAuthzPerRouteValidationError{
-				field:  "Disabled",
-				reason: "value must equal true",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
+		// no validation rules for Disabled
 	case *ExtAuthzPerRoute_CheckSettings:
 		if v == nil {
 			err := ExtAuthzPerRouteValidationError{
@@ -1355,6 +1528,122 @@ func (m *CheckSettings) validate(all bool) error {
 	// no validation rules for ContextExtensions
 
 	// no validation rules for DisableRequestBodyBuffering
+
+	if all {
+		switch v := interface{}(m.GetWithRequestBody()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CheckSettingsValidationError{
+					field:  "WithRequestBody",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CheckSettingsValidationError{
+					field:  "WithRequestBody",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetWithRequestBody()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CheckSettingsValidationError{
+				field:  "WithRequestBody",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	switch v := m.ServiceOverride.(type) {
+	case *CheckSettings_GrpcService:
+		if v == nil {
+			err := CheckSettingsValidationError{
+				field:  "ServiceOverride",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetGrpcService()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CheckSettingsValidationError{
+						field:  "GrpcService",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CheckSettingsValidationError{
+						field:  "GrpcService",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetGrpcService()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CheckSettingsValidationError{
+					field:  "GrpcService",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	case *CheckSettings_HttpService:
+		if v == nil {
+			err := CheckSettingsValidationError{
+				field:  "ServiceOverride",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if all {
+			switch v := interface{}(m.GetHttpService()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CheckSettingsValidationError{
+						field:  "HttpService",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CheckSettingsValidationError{
+						field:  "HttpService",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetHttpService()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CheckSettingsValidationError{
+					field:  "HttpService",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	default:
+		_ = v // ensures v is used
+	}
 
 	if len(errors) > 0 {
 		return CheckSettingsMultiError(errors)

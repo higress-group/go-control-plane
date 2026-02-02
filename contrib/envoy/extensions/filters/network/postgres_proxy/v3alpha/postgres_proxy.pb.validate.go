@@ -101,6 +101,8 @@ func (m *PostgresProxy) validate(all bool) error {
 
 	// no validation rules for UpstreamSsl
 
+	// no validation rules for DownstreamSsl
+
 	if len(errors) > 0 {
 		return PostgresProxyMultiError(errors)
 	}

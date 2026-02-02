@@ -200,6 +200,8 @@ func (m *HttpConnectionManager) validate(all bool) error {
 		}
 	}
 
+	// no validation rules for Http1SafeMaxConnectionDuration
+
 	if all {
 		switch v := interface{}(m.GetHttpProtocolOptions()).(type) {
 		case interface{ ValidateAll() error }:
@@ -376,6 +378,35 @@ func (m *HttpConnectionManager) validate(all bool) error {
 		if err := v.Validate(); err != nil {
 			return HttpConnectionManagerValidationError{
 				field:  "StreamIdleTimeout",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetStreamFlushTimeout()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HttpConnectionManagerValidationError{
+					field:  "StreamFlushTimeout",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HttpConnectionManagerValidationError{
+					field:  "StreamFlushTimeout",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetStreamFlushTimeout()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HttpConnectionManagerValidationError{
+				field:  "StreamFlushTimeout",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -1058,6 +1089,8 @@ func (m *HttpConnectionManager) validate(all bool) error {
 	}
 
 	// no validation rules for AppendXForwardedPort
+
+	// no validation rules for AppendLocalOverload
 
 	if all {
 		switch v := interface{}(m.GetAddProxyProtocolConnectionState()).(type) {
@@ -1801,17 +1834,6 @@ func (m *Rds) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetConfigSource() == nil {
-		err := RdsValidationError{
-			field:  "ConfigSource",
-			reason: "value is required",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if all {
 		switch v := interface{}(m.GetConfigSource()).(type) {
 		case interface{ ValidateAll() error }:
@@ -2170,6 +2192,35 @@ func (m *ScopedRoutes) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetRetryOtherScopeWhenNotFound()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ScopedRoutesValidationError{
+					field:  "RetryOtherScopeWhenNotFound",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ScopedRoutesValidationError{
+					field:  "RetryOtherScopeWhenNotFound",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetRetryOtherScopeWhenNotFound()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ScopedRoutesValidationError{
+				field:  "RetryOtherScopeWhenNotFound",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	oneofConfigSpecifierPresent := false
 	switch v := m.ConfigSpecifier.(type) {
 	case *ScopedRoutes_ScopedRouteConfigurationsList:
@@ -2522,6 +2573,8 @@ func (m *HttpFilter) validate(all bool) error {
 	}
 
 	// no validation rules for IsOptional
+
+	// no validation rules for Disabled
 
 	switch v := m.ConfigType.(type) {
 	case *HttpFilter_TypedConfig:
@@ -3149,6 +3202,35 @@ func (m *HttpConnectionManager_Tracing) validate(all bool) error {
 		if err := v.Validate(); err != nil {
 			return HttpConnectionManager_TracingValidationError{
 				field:  "Provider",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetSpawnUpstreamSpan()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HttpConnectionManager_TracingValidationError{
+					field:  "SpawnUpstreamSpan",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HttpConnectionManager_TracingValidationError{
+					field:  "SpawnUpstreamSpan",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSpawnUpstreamSpan()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HttpConnectionManager_TracingValidationError{
+				field:  "SpawnUpstreamSpan",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -4581,6 +4663,17 @@ func (m *ScopedRoutes_ScopeKeyBuilder_FragmentBuilder_HeaderValueExtractor) vali
 		errors = append(errors, err)
 	}
 
+	if !_ScopedRoutes_ScopeKeyBuilder_FragmentBuilder_HeaderValueExtractor_Name_Pattern.MatchString(m.GetName()) {
+		err := ScopedRoutes_ScopeKeyBuilder_FragmentBuilder_HeaderValueExtractorValidationError{
+			field:  "Name",
+			reason: "value does not match regex pattern \"^[^\\x00\\n\\r]*$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	// no validation rules for ElementSeparator
 
 	switch v := m.ExtractType.(type) {
@@ -4733,6 +4826,8 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ScopedRoutes_ScopeKeyBuilder_FragmentBuilder_HeaderValueExtractorValidationError{}
+
+var _ScopedRoutes_ScopeKeyBuilder_FragmentBuilder_HeaderValueExtractor_Name_Pattern = regexp.MustCompile("^[^\x00\n\r]*$")
 
 // Validate checks the field values on
 // ScopedRoutes_ScopeKeyBuilder_FragmentBuilder_HostValueExtractor with the

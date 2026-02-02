@@ -147,6 +147,10 @@ func (m *ExtAuthz) validate(all bool) error {
 
 	// no validation rules for BootstrapMetadataLabelsKey
 
+	// no validation rules for IncludeTlsSession
+
+	// no validation rules for SendTlsAlertOnDenial
+
 	if len(errors) > 0 {
 		return ExtAuthzMultiError(errors)
 	}

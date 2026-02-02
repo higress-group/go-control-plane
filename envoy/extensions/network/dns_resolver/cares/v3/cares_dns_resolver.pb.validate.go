@@ -57,17 +57,6 @@ func (m *CaresDnsResolverConfig) validate(all bool) error {
 
 	var errors []error
 
-	if len(m.GetResolvers()) < 1 {
-		err := CaresDnsResolverConfigValidationError{
-			field:  "Resolvers",
-			reason: "value must contain at least 1 item(s)",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	for idx, item := range m.GetResolvers() {
 		_, _ = idx, item
 
@@ -132,6 +121,112 @@ func (m *CaresDnsResolverConfig) validate(all bool) error {
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetUdpMaxQueries()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CaresDnsResolverConfigValidationError{
+					field:  "UdpMaxQueries",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CaresDnsResolverConfigValidationError{
+					field:  "UdpMaxQueries",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUdpMaxQueries()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CaresDnsResolverConfigValidationError{
+				field:  "UdpMaxQueries",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if wrapper := m.GetQueryTimeoutSeconds(); wrapper != nil {
+
+		if wrapper.GetValue() < 1 {
+			err := CaresDnsResolverConfigValidationError{
+				field:  "QueryTimeoutSeconds",
+				reason: "value must be greater than or equal to 1",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if wrapper := m.GetQueryTries(); wrapper != nil {
+
+		if wrapper.GetValue() < 1 {
+			err := CaresDnsResolverConfigValidationError{
+				field:  "QueryTries",
+				reason: "value must be greater than or equal to 1",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	// no validation rules for RotateNameservers
+
+	if wrapper := m.GetEdns0MaxPayloadSize(); wrapper != nil {
+
+		if val := wrapper.GetValue(); val < 512 || val > 4096 {
+			err := CaresDnsResolverConfigValidationError{
+				field:  "Edns0MaxPayloadSize",
+				reason: "value must be inside range [512, 4096]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if d := m.GetMaxUdpChannelDuration(); d != nil {
+		dur, err := d.AsDuration(), d.CheckValid()
+		if err != nil {
+			err = CaresDnsResolverConfigValidationError{
+				field:  "MaxUdpChannelDuration",
+				reason: "value is not a valid duration",
+				cause:  err,
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+
+			gte := time.Duration(0*time.Second + 0*time.Nanosecond)
+
+			if dur < gte {
+				err := CaresDnsResolverConfigValidationError{
+					field:  "MaxUdpChannelDuration",
+					reason: "value must be greater than or equal to 0s",
+				}
+				if !all {
+					return err
+				}
+				errors = append(errors, err)
+			}
+
 		}
 	}
 
