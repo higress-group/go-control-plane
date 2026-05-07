@@ -3,6 +3,7 @@
 ![CI Status](https://github.com/envoyproxy/go-control-plane/actions/workflows/ci.yaml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/envoyproxy/go-control-plane)](https://goreportcard.com/report/github.com/envoyproxy/go-control-plane)
 [![GoDoc](https://pkg.go.dev/badge/github.com/envoyproxy/go-control-plane.svg)](https://pkg.go.dev/github.com/envoyproxy/go-control-plane)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhigress-group%2Fgo-control-plane.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhigress-group%2Fgo-control-plane?ref=badge_shield)
 
 This repository contains a Go-based implementation of an API server that
 implements the discovery service APIs defined in
@@ -99,3 +100,7 @@ repository:
 ## Usage
 
 The [example server](internal/example/README.md) demonstrates how to integrate the go-control-plane with your code.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhigress-group%2Fgo-control-plane.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhigress-group%2Fgo-control-plane?ref=badge_large)
