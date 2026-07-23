@@ -10,7 +10,8 @@ PKG 		:= github.com/envoyproxy/go-control-plane
 
 .PHONY: build
 build:
-	@go build ./pkg/... ./envoy/...
+	@go build ./pkg/...
+	@cd envoy && go build ./...
 
 .PHONY: clean
 clean:
