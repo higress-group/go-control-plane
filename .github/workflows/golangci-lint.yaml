@@ -1,18 +1,35 @@
 name: golangci-lint
 
 on: [push, pull_request]
-  
+
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   golangci:
-    name: lint
+    name: lint (${{ matrix.module }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - module: root
+            working-directory: .
+            go-sum-file: go.sum
+          - module: envoy
+            working-directory: envoy
+            go-sum-file: envoy/go.sum
     steps:
-      - uses: actions/checkout@v3
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v6
         with:
-          version: latest
+          go-version: 1.24.9
+          cache-dependency-path: ${{ matrix.go-sum-file }}
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.12.2
           only-new-issues: true
-          
-          # Optional: golangci-lint command line arguments.
+          working-directory: ${{ matrix.working-directory }}
           args: --timeout=10m0s
