@@ -120,7 +120,7 @@ func (s *server) processDelta(str stream.DeltaStream, reqCh <-chan *discovery.De
 
 			typ := resp.GetDeltaRequest().GetTypeUrl()
 			if resp == deltaErrorResponse {
-				return status.Errorf(codes.Unavailable, typ+" watch failed")
+				return status.Error(codes.Unavailable, typ+" watch failed")
 			}
 
 			nonce, err := send(resp)

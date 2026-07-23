@@ -1,34 +1,70 @@
-run:
-  timeout: 10m
-
+version: "2"
 linters:
-  presets:
-  - bugs
-
   enable:
-  - bodyclose
-  - gofmt
-  - goimports
-  - gosec
-  - misspell
-  - revive
-  - unconvert
-  - unparam
-
-  disable:
-  - scopelint # deprecated but still enabled in the bugs preset
-
-linters-settings:
-  misspell:
-    locale: US
-  gofmt:
-    simplify: true
-  unparam:
-    check-exported: false
-  goimports:
-    local-prefixes: github.com/envoyproxy/go-control-plane
-  exhaustive:
-    default-signifies-exhaustive: true
-
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - durationcheck
+    - errchkjson
+    - errorlint
+    - exhaustive
+    - gocheckcompilerdirectives
+    - gochecksumtype
+    - gosec
+    - gosmopolitan
+    - loggercheck
+    - makezero
+    - misspell
+    - musttag
+    - nilerr
+    - nilnesserr
+    - noctx
+    - protogetter
+    - reassign
+    - recvcheck
+    - revive
+    - rowserrcheck
+    - spancheck
+    - sqlclosecheck
+    - testifylint
+    - unconvert
+    - unparam
+    - zerologlint
+  settings:
+    exhaustive:
+      default-signifies-exhaustive: true
+    misspell:
+      locale: US
+    unparam:
+      check-exported: false
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 issues:
   fix: true
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    gofmt:
+      simplify: true
+    goimports:
+      local-prefixes:
+        - github.com/envoyproxy/go-control-plane
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
