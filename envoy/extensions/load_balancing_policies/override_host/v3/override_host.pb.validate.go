@@ -103,6 +103,35 @@ func (m *OverrideHost) validate(all bool) error {
 
 	}
 
+	if all {
+		switch v := interface{}(m.GetSelectedHostKey()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, OverrideHostValidationError{
+					field:  "SelectedHostKey",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, OverrideHostValidationError{
+					field:  "SelectedHostKey",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSelectedHostKey()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return OverrideHostValidationError{
+				field:  "SelectedHostKey",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if m.GetFallbackPolicy() == nil {
 		err := OverrideHostValidationError{
 			field:  "FallbackPolicy",
@@ -156,7 +185,7 @@ type OverrideHostMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m OverrideHostMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -296,7 +325,7 @@ type OverrideHost_OverrideHostSourceMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m OverrideHost_OverrideHostSourceMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
